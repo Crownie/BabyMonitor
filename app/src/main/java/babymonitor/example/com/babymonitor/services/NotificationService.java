@@ -5,44 +5,30 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.os.IBinder;
-
-import babymonitor.example.com.babymonitor.MainActivity;
-import babymonitor.example.com.babymonitor.R;
+import babymonitor.example.com.babymonitor.*;
 import com.firebase.client.AuthData;
-import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 
-import java.util.Date;
-
-public class NotificationService extends Service implements ValueEventListener{
+public class NotificationService extends Service {
     public final static String ON_RECEIVE_DATA ="com.babymonitor.onreceivedata";
     private final static String FIREBASE_URL = "https://boiling-torch-7535.firebaseio.com";
-    private Firebase firebase = null;
 
-    private static long TOO_BIG_TEMPERATURE_DELTA = 20;
-    private static long TOO_HIGH_TEMPERATURE = 400;
-    private static long TOO_LOW_TEMPERATURE = 360;
-
-
-    private long mostRecentTemperature;
-    private Date timeMostRecentTemperatureWasRecordedAt;
-
-    /**
-     * Maintains a running change in temperature
-     * e.g. initially mostRecentTemperature = 380, runningDelta = 0
-     * -> next instant, mostRecentTemperature = 383, runningDelta += 3 and runningDelta = 3
-     * -> next instant, mostRecentTemperature = 385, runningDelta += 2 and runningDelta = 5
-     * -> next instant, mostRecentTemperature = 379, runningDelta += -6 and runningDelta = -1
-     * -> next instant, mostRecentTemperature = 358, runningDelta += -21 and runningDelta = -22
-     * now |runningDelta| >= 20 so send a notification that there has been too big a change in temperature
-     */
-    private long runningDelta;
+    private TemperatureRecord record;
+    private TemperatureChangeListener listener;
+    private TemperatureMonitor monitor;
 
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    @Override
+    public void onCreate() {
+        this.record = new TemperatureRecord();
+        this.listener = new TemperatureChangeListener(this.record);
+        this.monitor = new TemperatureMonitor(this);
+        this.monitor.monitorTemperatureRecord(this.record);
     }
 
     @Override
@@ -54,8 +40,8 @@ public class NotificationService extends Service implements ValueEventListener{
     public void setUpFirebase() {
         // get handle to firebase and authenticate
         Firebase.setAndroidContext(this);
-        this.firebase = new Firebase(NotificationService.FIREBASE_URL);
-        this.firebase.authWithPassword("eoogwe@gmail.com", "idiot", new Firebase.AuthResultHandler() {
+        Firebase firebase = new Firebase(NotificationService.FIREBASE_URL);
+        firebase.authWithPassword("eoogwe@gmail.com", "idiot", new Firebase.AuthResultHandler() {
             @Override
             public void onAuthenticated(AuthData authData) {
                 System.out.println("User ID: " + authData.getUid() + ", Provider: " + authData.getProvider());
@@ -68,53 +54,24 @@ public class NotificationService extends Service implements ValueEventListener{
         });
 
         // start listening to temperature changes
-        Firebase temperatureRef = this.firebase.child("temperature");
+        Firebase temperatureRef = firebase.child("temperature");
         if (temperatureRef == null) {
-            throw new RuntimeException("No temperature key available ");
+            throw new RuntimeException("No temperature key available from Firebase.");
         }
-        temperatureRef.addValueEventListener(this);
+        temperatureRef.addValueEventListener(this.listener);
     }
 
-    @Override
-    public void onDataChange(DataSnapshot snapshot) {
-        // NB: this gets called once when the service is instantiated
-        if (snapshot.getKey().equals("temperature")) {
-            long newTemperature = (Long) snapshot.getValue();
-            this.updateTemperature(newTemperature);
-            this.broadcastTemperature();
-            this.checkTemperatureSafety();
-        }
-
-    }
-
-    private void updateTemperature(long newTemperature) {
-        // update local fields
-        long oldTemperature = this.mostRecentTemperature;
-        this.runningDelta += newTemperature - oldTemperature;
-        this.mostRecentTemperature = newTemperature;
-        this.timeMostRecentTemperatureWasRecordedAt = new Date();
-    }
-
-    private void broadcastTemperature() {
+    /**
+     * Broadcast most recent temperature
+     */
+    public void broadcastTemperature(long temperature) {
         Intent intent = new Intent();
         intent.setAction(ON_RECEIVE_DATA);
-        intent.putExtra("temperature", mostRecentTemperature);
+        intent.putExtra("temperature", temperature);
         sendBroadcast(intent);
     }
 
-    private void checkTemperatureSafety() {
-        if (this.mostRecentTemperature <= NotificationService.TOO_LOW_TEMPERATURE) {
-            this.soundTemperatureAlarm("Too low: " + this.mostRecentTemperature);
-        } else if (NotificationService.TOO_HIGH_TEMPERATURE <= this.mostRecentTemperature) {
-            this.soundTemperatureAlarm("Too high: " + this.mostRecentTemperature);
-        }
-
-        if (NotificationService.TOO_BIG_TEMPERATURE_DELTA <= Math.abs(this.runningDelta)) {
-            this.soundTemperatureAlarm("Too big a temperature change: " + this.runningDelta);
-        }
-    }
-
-    private void soundTemperatureAlarm(String message) {
+    public void soundTemperatureAlarm(String message) {
         Notification.Builder nb = new Notification.Builder(this)
                 .setContentTitle("TEMPERATURE ALERT")
                 .setContentText(message)
@@ -132,10 +89,5 @@ public class NotificationService extends Service implements ValueEventListener{
 
         NotificationManager nm = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         nm.notify(100, nb.build());
-    }
-
-    @Override
-    public void onCancelled(FirebaseError firebaseError) {
-        System.out.println("Firebase Error:"+ firebaseError.toString());
     }
 }
