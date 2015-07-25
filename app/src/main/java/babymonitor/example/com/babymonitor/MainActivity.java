@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import babymonitor.example.com.babymonitor.fragments.GraphFragment;
 import babymonitor.example.com.babymonitor.fragments.MainFragment;
+import babymonitor.example.com.babymonitor.fragments.NavigationDrawerFragment;
 import babymonitor.example.com.babymonitor.services.NotificationService;
 
 
