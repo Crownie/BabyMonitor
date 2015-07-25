@@ -51,8 +51,6 @@ public class GraphFragment extends Fragment {
         labels.add("April");
         labels.add("May");
         labels.add("June");
-
-
     }
 
     @Override

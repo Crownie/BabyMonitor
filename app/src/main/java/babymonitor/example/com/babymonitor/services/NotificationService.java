@@ -10,6 +10,8 @@ import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
+import java.util.logging.Logger;
+
 public class NotificationService extends Service {
     public final static String ON_RECEIVE_DATA ="com.babymonitor.onreceivedata";
     private final static String FIREBASE_URL = "https://boiling-torch-7535.firebaseio.com";
@@ -41,15 +43,15 @@ public class NotificationService extends Service {
         // get handle to firebase and authenticate
         Firebase.setAndroidContext(this);
         Firebase firebase = new Firebase(NotificationService.FIREBASE_URL);
-        firebase.authWithPassword("eoogwe@gmail.com", "idiot", new Firebase.AuthResultHandler() {
+        firebase.authAnonymously(new Firebase.AuthResultHandler() {
             @Override
             public void onAuthenticated(AuthData authData) {
-                System.out.println("User ID: " + authData.getUid() + ", Provider: " + authData.getProvider());
+                Logger.getLogger("firebase").fine("authenticated successfully with firebase");
             }
 
             @Override
             public void onAuthenticationError(FirebaseError firebaseError) {
-                // there was an error
+                Logger.getLogger("firebase").severe("could not authenticate with firebase");
             }
         });
 

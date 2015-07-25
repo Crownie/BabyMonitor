@@ -23,7 +23,7 @@ import babymonitor.example.com.babymonitor.services.NotificationService;
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
-    DataReceiver receiver;
+    private MainActivity.TemperatureReceiver receiver;
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -57,7 +57,7 @@ public class MainActivity extends ActionBarActivity
         Intent i = new Intent(getApplicationContext(), NotificationService.class);
         // potentially add data to the intent
 //        i.putExtra("KEY1", "Value to be used by the service");
-        receiver = new DataReceiver();
+        receiver = new TemperatureReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(NotificationService.ON_RECEIVE_DATA);
         registerReceiver(receiver, intentFilter);
@@ -139,22 +139,21 @@ public class MainActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
-    public void updateData(){
-        if(mainFragment!=null){
+    public void updateTemperature() {
+        if (mainFragment != null) {
             mainFragment.setTemperature(currentTemperature);
         }
     }
 
-    class DataReceiver extends BroadcastReceiver {
+    class TemperatureReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-           currentTemperature =  intent.getLongExtra("temperature",0L);
-            Toast.makeText(context,"Latest Temperature: "+currentTemperature,Toast.LENGTH_LONG);
-            System.out.println("current Temperature: "+currentTemperature);
-            updateData();
+            currentTemperature = intent.getLongExtra("temperature", 0L);
+            Toast.makeText(context, "Latest Temperature: " + currentTemperature, Toast.LENGTH_LONG).show();
+            System.out.println("current Temperature: " + currentTemperature);
+            MainActivity.this.updateTemperature();
         }
+
     }
-
-
 }
