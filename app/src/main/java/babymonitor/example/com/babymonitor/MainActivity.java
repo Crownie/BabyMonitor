@@ -21,6 +21,8 @@ import babymonitor.example.com.babymonitor.services.NotificationService;
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
+    DataReceiver receiver;
+
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -49,6 +51,11 @@ public class MainActivity extends ActionBarActivity
         Intent i = new Intent(getApplicationContext(), NotificationService.class);
         // potentially add data to the intent
 //        i.putExtra("KEY1", "Value to be used by the service");
+        receiver = new DataReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(NotificationService.ON_RECEIVE_DATA);
+        registerReceiver(receiver, intentFilter);
+
         getApplicationContext().startService(i);
     }
 

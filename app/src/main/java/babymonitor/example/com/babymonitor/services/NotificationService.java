@@ -11,6 +11,8 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 public class NotificationService extends Service implements ValueEventListener{
+    public final static String ON_RECEIVE_DATA ="com.babymonitor.onreceivedata";
+
     public NotificationService() {
     }
 
