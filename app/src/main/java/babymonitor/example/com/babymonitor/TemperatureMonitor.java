@@ -29,6 +29,8 @@ public class TemperatureMonitor implements Observer {
         long mostRecentTemperature = record.getMostRecentTemperature();
         long runningDelta = record.getRunningDelta();
         this.checkTemperatureSafety(mostRecentTemperature, runningDelta);
+        // also notify the UI of the temperature change
+        this.notificationService.broadcastTemperature(mostRecentTemperature);
     }
 
     /**

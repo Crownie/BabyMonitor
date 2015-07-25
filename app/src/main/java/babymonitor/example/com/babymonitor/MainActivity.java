@@ -35,7 +35,6 @@ public class MainActivity extends ActionBarActivity
      */
     private CharSequence mTitle;
 
-    private long currentTemperature = 0L;
     private MainFragment mainFragment;
     private GraphFragment graphFragment;
 
@@ -139,9 +138,9 @@ public class MainActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
-    public void updateTemperature() {
+    public void updateTemperature(long temperature) {
         if (mainFragment != null) {
-            mainFragment.setTemperature(currentTemperature);
+            mainFragment.setTemperature(temperature);
         }
     }
 
@@ -149,10 +148,10 @@ public class MainActivity extends ActionBarActivity
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            currentTemperature = intent.getLongExtra("temperature", 0L);
-            Toast.makeText(context, "Latest Temperature: " + currentTemperature, Toast.LENGTH_LONG).show();
-            System.out.println("current Temperature: " + currentTemperature);
-            MainActivity.this.updateTemperature();
+            long temperature = intent.getLongExtra("temperature", 0L);
+            Toast.makeText(context, "Latest Temperature: " + temperature, Toast.LENGTH_LONG).show();
+            System.out.println("Current Temperature: " + temperature);
+            MainActivity.this.updateTemperature(temperature);
         }
 
     }
