@@ -5,3 +5,9 @@
 .DS_Store
 /build
 /captures
+
+#built application files
+*.apk
+
+# Android Studio
+*.iml
