@@ -65,7 +65,12 @@ public class NotificationService extends Service implements ValueEventListener{
     }
 
     private void updateTemperature(long mostRecentTemperature) {
+        Intent intent = new Intent();
+        intent.setAction(ON_RECEIVE_DATA);
 
+        intent.putExtra("temperature", mostRecentTemperature);
+
+        sendBroadcast(intent);
     }
 
     @Override
