@@ -13,9 +13,7 @@ import com.firebase.client.ValueEventListener;
 public class NotificationService extends Service implements ValueEventListener{
     public final static String ON_RECEIVE_DATA ="com.babymonitor.onreceivedata";
     private final static String FIREBASE_URL = "https://boiling-torch-7535.firebaseio.com";
-
-    public NotificationService() {
-    }
+    private Firebase firebase = null;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -30,11 +28,11 @@ public class NotificationService extends Service implements ValueEventListener{
         return Service.START_STICKY;
     }
 
-    public void setUpFirebase(){
+    public void setUpFirebase() {
+        // get handle to firebase and authenticate
         Firebase.setAndroidContext(this);
-        Firebase myFirebaseRef = new Firebase(NotificationService.FIREBASE_URL);
-
-        myFirebaseRef.authWithPassword("eoogwe@gmail.com", "idiot", new Firebase.AuthResultHandler() {
+        this.firebase = new Firebase(NotificationService.FIREBASE_URL);
+        this.firebase.authWithPassword("eoogwe@gmail.com", "idiot", new Firebase.AuthResultHandler() {
             @Override
             public void onAuthenticated(AuthData authData) {
                 System.out.println("User ID: " + authData.getUid() + ", Provider: " + authData.getProvider());
@@ -46,8 +44,8 @@ public class NotificationService extends Service implements ValueEventListener{
             }
         });
 
-        Firebase temperatureRef = myFirebaseRef.child("temperature");
-
+        // start listening to temperature changes
+        Firebase temperatureRef = this.firebase.child("temperature");
         if (temperatureRef == null) {
             // TODO proper handled exception
             throw new RuntimeException("Could not fetch temperature.");
