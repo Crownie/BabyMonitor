@@ -10,15 +10,29 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import java.util.Date;
+
 public class NotificationService extends Service implements ValueEventListener{
     public final static String ON_RECEIVE_DATA ="com.babymonitor.onreceivedata";
     private final static String FIREBASE_URL = "https://boiling-torch-7535.firebaseio.com";
     private Firebase firebase = null;
 
+    private long mostRecentTemperature;
+    private Date timeMostRecentTemperatureWasRecordedAt;
+
+    /**
+     * Maintains a running change in temperature
+     * e.g. initially mostRecentTemperature = 380, runningDelta = 0
+     * -> next instant, mostRecentTemperature = 383, runningDelta += 3 and runningDelta = 3
+     * -> next instant, mostRecentTemperature = 385, runningDelta += 2 and runningDelta = 5
+     * -> next instant, mostRecentTemperature = 379, runningDelta += -6 and runningDelta = -1
+     * -> next instant, mostRecentTemperature = 358, runningDelta += -21 and runningDelta = -22
+     * now |runningDelta| >= 20 so send a notification that there has been too big a change in temperature
+     */
+    private long runningDelta;
+
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
-
         return null;
     }
 
@@ -47,8 +61,7 @@ public class NotificationService extends Service implements ValueEventListener{
         // start listening to temperature changes
         Firebase temperatureRef = this.firebase.child("temperature");
         if (temperatureRef == null) {
-            // TODO proper handled exception
-            throw new RuntimeException("Could not fetch temperature.");
+            throw new RuntimeException("No temperature key available ");
         }
         temperatureRef.addValueEventListener(this);
     }
@@ -57,19 +70,31 @@ public class NotificationService extends Service implements ValueEventListener{
     public void onDataChange(DataSnapshot snapshot) {
         // NB: this gets called once when the service is instantiated
         if (snapshot.getKey().equals("temperature")) {
-            long mostRecentTemperature = (Long) snapshot.getValue();
-            this.updateTemperature(mostRecentTemperature);
+            long newTemperature = (Long) snapshot.getValue();
+            this.updateTemperature(newTemperature);
+            this.broadcastTemperature();
+            this.checkTemperatureSafety();
         }
 
     }
 
-    private void updateTemperature(long mostRecentTemperature) {
+    private void updateTemperature(long newTemperature) {
+        // update local fields
+        long oldTemperature = this.mostRecentTemperature;
+        this.runningDelta += newTemperature - oldTemperature;
+        this.mostRecentTemperature = newTemperature;
+        this.timeMostRecentTemperatureWasRecordedAt = new Date();
+    }
+
+    private void broadcastTemperature() {
         Intent intent = new Intent();
         intent.setAction(ON_RECEIVE_DATA);
-
         intent.putExtra("temperature", mostRecentTemperature);
-
         sendBroadcast(intent);
+    }
+
+    private void checkTemperatureSafety() {
+
     }
 
     @Override
