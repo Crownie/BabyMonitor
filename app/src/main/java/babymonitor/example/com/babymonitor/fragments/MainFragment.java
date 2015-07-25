@@ -15,16 +15,11 @@ import babymonitor.example.com.babymonitor.R;
 
 public class MainFragment extends Fragment {
 
-
-    String URL = "http://192.168.43.192:8080";
+    String url = "http://192.168.43.192:8080";
     boolean attached = false;
 
     public static MainFragment newInstance() {
-        MainFragment fragment = new MainFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        fragment.setArguments(args);
-        return fragment;
+        return new MainFragment();
     }
 
     public MainFragment() {
@@ -47,7 +42,7 @@ public class MainFragment extends Fragment {
 
         WebView wv = (WebView) rootView.findViewById(R.id.stream_webview);
 
-        wv.loadUrl(URL);
+        wv.loadUrl(url);
 
         return rootView;
     }
@@ -73,8 +68,8 @@ public class MainFragment extends Fragment {
 
     public void setTemperature(long temperature) {
         if(attached){
-            TextView tv = (TextView) getView().findViewById(R.id.tvTemprature);
-            tv.setText("Temperature: "+temperature);
+            TextView tv = (TextView) getView().findViewById(R.id.tvTemperature);
+            tv.setText("Temperature: " + temperature);
         }
     }
 }
