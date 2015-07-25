@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import babymonitor.example.com.babymonitor.fragments.GraphFragment;
 import babymonitor.example.com.babymonitor.fragments.MainFragment;
@@ -32,6 +33,8 @@ public class MainActivity extends ActionBarActivity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+
+    private long currentTemperature = 0L;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +133,9 @@ public class MainActivity extends ActionBarActivity
 
         @Override
         public void onReceive(Context context, Intent intent) {
-
+           currentTemperature =  intent.getLongExtra("temperature",0L);
+            Toast.makeText(context,"Latest Temperature: "+currentTemperature,Toast.LENGTH_LONG);
+            System.out.println("current Temperature: "+currentTemperature);
         }
     }
 
