@@ -36,21 +36,33 @@ public class NotificationService extends Service implements ValueEventListener{
             public void onAuthenticated(AuthData authData) {
                 System.out.println("User ID: " + authData.getUid() + ", Provider: " + authData.getProvider());
             }
+
             @Override
             public void onAuthenticationError(FirebaseError firebaseError) {
                 // there was an error
             }
         });
 
-        myFirebaseRef.child("temperature").addValueEventListener(this);
+        Firebase temperatureRef = myFirebaseRef.child("temperature");
+
+        if (temperatureRef == null) {
+            // TODO proper handled exception
+            throw new RuntimeException("Could not fetch temperature.");
+        }
+        temperatureRef.addValueEventListener(this);
     }
 
     @Override
     public void onDataChange(DataSnapshot snapshot) {
-
-        if(snapshot.getKey().equals("temperature")){
-            System.out.println("Randomaskmakmskkldksdkls  "+snapshot.getValue());  //prints "Do you have data? You'll love Firebase."
+        // NB: this gets called once when the service is instantiated
+        if (snapshot.getKey().equals("temperature")){
+            long mostRecentTemperature = (Long) snapshot.getValue();
+            this.updateTemperature(mostRecentTemperature);
         }
+
+    }
+
+    private void updateTemperature(long mostRecentTemperature) {
 
     }
 

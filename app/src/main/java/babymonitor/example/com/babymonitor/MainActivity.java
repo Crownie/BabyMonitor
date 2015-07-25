@@ -3,15 +3,15 @@ package babymonitor.example.com.babymonitor;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.FragmentManager;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.support.v4.widget.DrawerLayout;
 
 import babymonitor.example.com.babymonitor.fragments.GraphFragment;
 import babymonitor.example.com.babymonitor.fragments.MainFragment;
@@ -48,7 +48,7 @@ public class MainActivity extends ActionBarActivity
         // use this to start and trigger a service
         Intent i = new Intent(getApplicationContext(), NotificationService.class);
         // potentially add data to the intent
-        i.putExtra("KEY1", "Value to be used by the service");
+//        i.putExtra("KEY1", "Value to be used by the service");
         getApplicationContext().startService(i);
     }
 
@@ -119,7 +119,7 @@ public class MainActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
-    class DataReceiver extends BroadcastReceiver{
+    class DataReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {

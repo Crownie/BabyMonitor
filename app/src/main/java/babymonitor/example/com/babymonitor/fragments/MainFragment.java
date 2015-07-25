@@ -6,12 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.firebase.client.AuthData;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
+import android.webkit.WebView;
 
 import babymonitor.example.com.babymonitor.MainActivity;
 import babymonitor.example.com.babymonitor.R;
@@ -19,6 +14,8 @@ import babymonitor.example.com.babymonitor.R;
 
 public class MainFragment extends Fragment {
 
+
+    String URL = "http://192.168.43.192:8080";
 
     public static MainFragment newInstance() {
         MainFragment fragment = new MainFragment();
@@ -36,7 +33,7 @@ public class MainFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-           // mParam1 = getArguments().getString(ARG_PARAM1);
+            // mParam1 = getArguments().getString(ARG_PARAM1);
         }
 
     }
@@ -45,6 +42,11 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+        WebView wv = (WebView) rootView.findViewById(R.id.stream_webview);
+
+        wv.loadUrl(URL);
+
         return rootView;
     }
 
