@@ -1,9 +1,13 @@
 package babymonitor.example.com.babymonitor.services;
 
-import android.app.Service;
+import android.app.*;
+import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
 import android.os.IBinder;
 
+import babymonitor.example.com.babymonitor.MainActivity;
+import babymonitor.example.com.babymonitor.R;
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -16,6 +20,11 @@ public class NotificationService extends Service implements ValueEventListener{
     public final static String ON_RECEIVE_DATA ="com.babymonitor.onreceivedata";
     private final static String FIREBASE_URL = "https://boiling-torch-7535.firebaseio.com";
     private Firebase firebase = null;
+
+    private static long TOO_BIG_TEMPERATURE_DELTA = 20;
+    private static long TOO_HIGH_TEMPERATURE = 400;
+    private static long TOO_LOW_TEMPERATURE = 360;
+
 
     private long mostRecentTemperature;
     private Date timeMostRecentTemperatureWasRecordedAt;
@@ -94,7 +103,35 @@ public class NotificationService extends Service implements ValueEventListener{
     }
 
     private void checkTemperatureSafety() {
+        if (this.mostRecentTemperature <= NotificationService.TOO_LOW_TEMPERATURE) {
+            this.soundTemperatureAlarm("Too low: " + this.mostRecentTemperature);
+        } else if (NotificationService.TOO_HIGH_TEMPERATURE <= this.mostRecentTemperature) {
+            this.soundTemperatureAlarm("Too high: " + this.mostRecentTemperature);
+        }
 
+        if (NotificationService.TOO_BIG_TEMPERATURE_DELTA <= Math.abs(this.runningDelta)) {
+            this.soundTemperatureAlarm("Too big a temperature change: " + this.runningDelta);
+        }
+    }
+
+    private void soundTemperatureAlarm(String message) {
+        Notification.Builder nb = new Notification.Builder(this)
+                .setContentTitle("TEMPERATURE ALERT")
+                .setContentText(message)
+                .setLights(1000, 200, 100)
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM))
+                .setSmallIcon(R.drawable.abc_btn_check_material);
+
+        Intent intent = new Intent(this, MainActivity.class);
+        TaskStackBuilder tsb = TaskStackBuilder.create(this);
+        tsb.addParentStack(MainActivity.class);
+        tsb.addNextIntent(intent);
+
+        PendingIntent pendingIntent = tsb.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        nb.setContentIntent(pendingIntent);
+
+        NotificationManager nm = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        nm.notify(100, nb.build());
     }
 
     @Override
