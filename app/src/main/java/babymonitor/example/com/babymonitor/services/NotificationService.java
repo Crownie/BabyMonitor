@@ -58,7 +58,7 @@ public class NotificationService extends Service implements ValueEventListener{
     @Override
     public void onDataChange(DataSnapshot snapshot) {
         // NB: this gets called once when the service is instantiated
-        if (snapshot.getKey().equals("temperature")){
+        if (snapshot.getKey().equals("temperature")) {
             long mostRecentTemperature = (Long) snapshot.getValue();
             this.updateTemperature(mostRecentTemperature);
         }
