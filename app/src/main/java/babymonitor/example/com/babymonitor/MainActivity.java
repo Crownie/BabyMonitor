@@ -35,6 +35,8 @@ public class MainActivity extends ActionBarActivity
     private CharSequence mTitle;
 
     private long currentTemperature = 0L;
+    private MainFragment mainFragment;
+    private GraphFragment graphFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,20 +62,27 @@ public class MainActivity extends ActionBarActivity
         registerReceiver(receiver, intentFilter);
 
         getApplicationContext().startService(i);
+
+    }
+
+    private void initFragments() {
+        mainFragment = MainFragment.newInstance();
+        graphFragment = GraphFragment.newInstance();
     }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
+        initFragments();
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         switch (position) {
             case 0:
-                transaction.replace(R.id.container, MainFragment.newInstance());
+                transaction.replace(R.id.container, mainFragment);
                 break;
             case 1:
-                transaction.replace(R.id.container, GraphFragment.newInstance());
+                transaction.replace(R.id.container, graphFragment);
                 break;
         }
         transaction.commit();
@@ -129,6 +138,12 @@ public class MainActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
+    public void updateData(){
+        if(mainFragment!=null){
+            mainFragment.setTemperature(currentTemperature);
+        }
+    }
+
     class DataReceiver extends BroadcastReceiver {
 
         @Override
@@ -136,6 +151,7 @@ public class MainActivity extends ActionBarActivity
            currentTemperature =  intent.getLongExtra("temperature",0L);
             Toast.makeText(context,"Latest Temperature: "+currentTemperature,Toast.LENGTH_LONG);
             System.out.println("current Temperature: "+currentTemperature);
+            updateData();
         }
     }
 

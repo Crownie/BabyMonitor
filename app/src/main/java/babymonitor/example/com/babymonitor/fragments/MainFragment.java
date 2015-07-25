@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.TextView;
 
 import babymonitor.example.com.babymonitor.MainActivity;
 import babymonitor.example.com.babymonitor.R;
@@ -16,6 +17,7 @@ public class MainFragment extends Fragment {
 
 
     String URL = "http://192.168.43.192:8080";
+    boolean attached = false;
 
     public static MainFragment newInstance() {
         MainFragment fragment = new MainFragment();
@@ -54,7 +56,7 @@ public class MainFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         ((MainActivity) activity).onSectionAttached(1);
-
+        attached = true;
 
     }
 
@@ -66,6 +68,13 @@ public class MainFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        attached = false;
     }
 
+    public void setTemperature(long temperature) {
+        if(attached){
+            TextView tv = (TextView) getView().findViewById(R.id.tvTemprature);
+            tv.setText("Temperature: "+temperature);
+        }
+    }
 }
