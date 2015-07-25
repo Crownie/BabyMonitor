@@ -12,6 +12,7 @@ import com.firebase.client.ValueEventListener;
 
 public class NotificationService extends Service implements ValueEventListener{
     public final static String ON_RECEIVE_DATA ="com.babymonitor.onreceivedata";
+    private final static String FIREBASE_URL = "https://boiling-torch-7535.firebaseio.com";
 
     public NotificationService() {
     }
@@ -31,7 +32,7 @@ public class NotificationService extends Service implements ValueEventListener{
 
     public void setUpFirebase(){
         Firebase.setAndroidContext(this);
-        Firebase myFirebaseRef = new Firebase("http://boiling-torch-7535.firebaseio.com");
+        Firebase myFirebaseRef = new Firebase(NotificationService.FIREBASE_URL);
 
         myFirebaseRef.authWithPassword("eoogwe@gmail.com", "idiot", new Firebase.AuthResultHandler() {
             @Override
@@ -57,7 +58,7 @@ public class NotificationService extends Service implements ValueEventListener{
     @Override
     public void onDataChange(DataSnapshot snapshot) {
         // NB: this gets called once when the service is instantiated
-        if (snapshot.getKey().equals("temperature")){
+        if (snapshot.getKey().equals("temperature")) {
             long mostRecentTemperature = (Long) snapshot.getValue();
             this.updateTemperature(mostRecentTemperature);
         }
