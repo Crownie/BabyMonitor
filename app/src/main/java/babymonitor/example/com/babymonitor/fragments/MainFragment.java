@@ -16,7 +16,7 @@ import babymonitor.example.com.babymonitor.R;
 
 public class MainFragment extends Fragment implements View.OnClickListener {
 
-    String url = "http://192.168.43.66:8080";
+    public static final String url = "http://192.168.43.66:8080";
     boolean attached = false;
 
     public static MainFragment newInstance() {

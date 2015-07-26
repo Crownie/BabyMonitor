@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -148,6 +149,17 @@ public class MainActivity extends ActionBarActivity
         if (mainFragment != null) {
             mainFragment.setTemperature(temperature);
         }
+    }
+
+    /**
+     * Open the web interface in a browser.
+     * https://stackoverflow.com/questions/3004515/android-sending-an-intent-to-browser-to-open-specific-url
+     * @param item
+     */
+    public void openBrowser(MenuItem item) {
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(MainFragment.url));
+        this.startActivity(i);
     }
 
     class TemperatureReceiver extends BroadcastReceiver {
