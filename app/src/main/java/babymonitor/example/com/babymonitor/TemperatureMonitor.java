@@ -19,7 +19,7 @@ public class TemperatureMonitor implements ChildEventListener {
             throw new NullPointerException();
         }
         this.service = service;
-        this.settings = new TemperatureMonitorSettings(10, 100, 200);
+        this.settings = new TemperatureMonitorSettings(20, 50, 100);
     }
 
     public void setBabyTemperature(long babyTemperature) {

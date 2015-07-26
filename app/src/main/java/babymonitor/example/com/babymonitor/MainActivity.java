@@ -155,7 +155,7 @@ public class MainActivity extends ActionBarActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             long temperature = intent.getLongExtra("temperature", 0L);
-            Toast.makeText(context, "Latest Temperature: " + temperature, Toast.LENGTH_LONG).show();
+//            Toast.makeText(context, "Latest Temperature: " + temperature, Toast.LENGTH_LONG).show();
             System.out.println("Current Temperature: " + temperature);
             MainActivity.this.updateTemperature(temperature);
         }
