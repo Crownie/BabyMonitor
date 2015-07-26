@@ -33,6 +33,7 @@ public class TemperatureMonitor implements ChildEventListener {
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
         // initially called at instantiation for every child in chronological order
+        // if still more children, don't sound alarm!!
         long oldTimestamp = this.mostRecentTimestamp;
         long oldTemperature = this.mostRecentTemperature;
 
