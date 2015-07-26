@@ -7,6 +7,7 @@ import com.firebase.client.FirebaseError;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class TemperatureMonitor implements ChildEventListener {
 
@@ -25,7 +26,7 @@ public class TemperatureMonitor implements ChildEventListener {
         }
         this.service = service;
         this.settings = new TemperatureMonitorSettings(20, 50, 100);
-        this.timestampsToTemperature = new HashMap<>();
+        this.timestampsToTemperature = new TreeMap<>();
     }
 
     public void setBabyTemperature(long babyTemperature) {
