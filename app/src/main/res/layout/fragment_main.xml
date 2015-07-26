@@ -39,66 +39,34 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:orientation="vertical"
-        android:id="@+id/roomTemp"
-        android:background="@drawable/temp_bg_right"
-        android:layout_alignTop="@+id/bodyTemp"
-        android:layout_alignRight="@+id/stream_webview"
-        android:layout_alignEnd="@+id/stream_webview">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="12dp"
-            android:text="Room Temperature" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="0°"
-            android:id="@+id/tvRoomTemperature"
-            android:textAlignment="gravity" />
-
-
-    </LinearLayout>
-
     <ImageButton
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:id="@+id/btnTalk"
         android:background="@drawable/mic_btn"
-        android:layout_below="@+id/stream_webview"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerVertical="true" android:layout_centerHorizontal="true" android:contentDescription="talk"/>
 
     <ImageButton
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:id="@+id/btnChart"
         android:background="@drawable/chart"
-        android:layout_below="@+id/btnTalk"
-        android:layout_toLeftOf="@+id/btnTalk"
-        android:layout_toStartOf="@+id/btnTalk" />
+        android:layout_below="@+id/btnTalk" android:layout_toStartOf="@+id/btnTalk" android:contentDescription="chart"/>
 
     <ImageButton
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:id="@+id/btnSing"
         android:background="@drawable/music_btn"
-        android:layout_alignTop="@+id/btnChart"
-        android:layout_toRightOf="@+id/btnTalk"
-        android:layout_toEndOf="@+id/btnTalk" />
+        android:layout_alignTop="@+id/btnChart" android:layout_toEndOf="@+id/btnTalk"
+        android:contentDescription="sing"/>
 
     <ImageButton
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:id="@+id/btnSettings"
         android:background="@drawable/settings_btn"
-        android:layout_below="@+id/btnSing"
-        android:layout_toLeftOf="@+id/btnSing"
-        android:layout_toStartOf="@+id/btnSing" />
+        android:layout_below="@+id/btnSing" android:layout_toStartOf="@+id/btnSing"
+        android:contentDescription="settings"/>
 
 </RelativeLayout>
