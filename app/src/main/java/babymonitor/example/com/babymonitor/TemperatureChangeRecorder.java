@@ -7,9 +7,9 @@ import com.firebase.client.FirebaseError;
 
 public class TemperatureChangeRecorder implements ChildEventListener {
 
-    public static long TOO_BIG_TEMPERATURE_DELTA = 20;
-    public static long TOO_HIGH_TEMPERATURE = 400;
-    public static long TOO_LOW_TEMPERATURE = 360;
+    public static long TOO_BIG_TEMPERATURE_DELTA = 40;
+    public static long TOO_HIGH_TEMPERATURE = 100;
+    public static long TOO_LOW_TEMPERATURE = 10;
 
     private final TemperatureMonitorService service;
     private long mostRecentTemperature = 0L;
@@ -25,8 +25,7 @@ public class TemperatureChangeRecorder implements ChildEventListener {
 
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-        // initially called at instantiation with dataSnapshot = latest child added
-        System.out.println("Snapshot received: " + dataSnapshot);
+        // initially called at instantiation for every child in chronological order
         long oldTimestamp = this.mostRecentTimestamp;
         long oldTemperature = this.mostRecentTemperature;
 
@@ -37,8 +36,9 @@ public class TemperatureChangeRecorder implements ChildEventListener {
             System.out.println("WARNING: Temperature data point from the past published.");
         }
 
-        // update running delta
-        this.runningDelta += newTemperature - oldTemperature;
+        long delta = newTemperature - oldTemperature;
+        this.runningDelta = this.runningDelta + delta;
+        System.out.println("Running delta now " + runningDelta);
 
         // update instance fields
         this.mostRecentTemperature = newTemperature;
