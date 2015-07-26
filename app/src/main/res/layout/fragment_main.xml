@@ -14,7 +14,7 @@
         android:id="@+id/stream_webview"
         android:layout_alignTop="@+id/bodyTemp"
         android:layout_alignLeft="@+id/bodyTemp"
-        android:layout_alignStart="@+id/bodyTemp"></WebView>
+        android:layout_alignStart="@+id/bodyTemp"/>
     <LinearLayout
         android:layout_width="80dp"
         android:layout_height="80dp"
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="0°"
-            android:id="@+id/tvTemprature"
+            android:id="@+id/tvTemperature"
             />
 
 
