@@ -34,7 +34,7 @@ public class TemperatureChangeRecorder implements ChildEventListener {
         long newTemperature = (Long) dataSnapshot.getValue();
 
         if (newTimestamp < oldTimestamp) {
-            throw new RuntimeException("Temperature data point from the past published.");
+            System.out.println("WARNING: Temperature data point from the past published.");
         }
 
         // update running delta
@@ -64,8 +64,6 @@ public class TemperatureChangeRecorder implements ChildEventListener {
 
     /**
      * Timestamps are immutable and shouldn't change once added.
-     * @param dataSnapshot
-     * @param previousChildName
      */
     @Override
     public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
