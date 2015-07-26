@@ -15,7 +15,6 @@ public class TemperatureChangeListener implements ValueEventListener {
     private final TemperatureRecord record;
     
     /**
-     *
      * @param record the temperature record to be updated
      */
     public TemperatureChangeListener(TemperatureRecord record) {
