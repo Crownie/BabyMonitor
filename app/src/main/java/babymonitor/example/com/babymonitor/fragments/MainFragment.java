@@ -7,13 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import babymonitor.example.com.babymonitor.MainActivity;
 import babymonitor.example.com.babymonitor.R;
 
 
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements View.OnClickListener {
 
     String url = "http://192.168.43.192:8080";
     boolean attached = false;
@@ -41,10 +42,17 @@ public class MainFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         WebView wv = (WebView) rootView.findViewById(R.id.stream_webview);
+        ImageButton chartBtn =(ImageButton) rootView.findViewById(R.id.btnChart);
+        chartBtn.setOnClickListener(this);
+        initButtons();
 
         wv.loadUrl(url);
 
         return rootView;
+    }
+
+    private void initButtons() {
+
     }
 
     @Override
@@ -69,7 +77,16 @@ public class MainFragment extends Fragment {
     public void setTemperature(long temperature) {
         if(attached){
             TextView tv = (TextView) getView().findViewById(R.id.tvTemperature);
-            tv.setText("Temperature: " + temperature);
+            tv.setText(temperature+"°C");
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.btnChart:
+                ((MainActivity) getActivity()).onNavigationDrawerItemSelected(1);
+                break;
         }
     }
 }
