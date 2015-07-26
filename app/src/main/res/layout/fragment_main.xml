@@ -1,39 +1,70 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:id="@+id/rly_main"
     android:weightSum="1"
     android:background="@drawable/bg"
     >
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/linearLayout">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Temperature: 0"
-            android:id="@+id/tvTemprature" />
-    </LinearLayout>
-
-
-
 
     <WebView
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:id="@+id/stream_webview"
-        android:layout_below="@+id/linearLayout"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"></WebView>
+        android:layout_alignTop="@+id/bodyTemp"
+        android:layout_alignLeft="@+id/bodyTemp"
+        android:layout_alignStart="@+id/bodyTemp"></WebView>
+    <LinearLayout
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:orientation="vertical"
+        android:id="@+id/bodyTemp"
+        android:background="@drawable/temp_bg_left">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12dp"
+            android:text="Temperature"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="0°"
+            android:id="@+id/tvTemprature"
+            />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:orientation="vertical"
+        android:id="@+id/roomTemp"
+        android:background="@drawable/temp_bg_right"
+        android:layout_alignTop="@+id/bodyTemp"
+        android:layout_alignRight="@+id/stream_webview"
+        android:layout_alignEnd="@+id/stream_webview">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12dp"
+            android:text="Room Temperature" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="0°"
+            android:id="@+id/tvRoomTemperature"
+            android:textAlignment="gravity" />
+
+
+    </LinearLayout>
 
     <ImageButton
         android:layout_width="80dp"
