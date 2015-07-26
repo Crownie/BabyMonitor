@@ -16,6 +16,7 @@ import android.widget.Toast;
 import babymonitor.example.com.babymonitor.fragments.GraphFragment;
 import babymonitor.example.com.babymonitor.fragments.MainFragment;
 import babymonitor.example.com.babymonitor.fragments.NavigationDrawerFragment;
+import babymonitor.example.com.babymonitor.fragments.SettingsFragment;
 import babymonitor.example.com.babymonitor.services.TemperatureMonitorService;
 
 
@@ -36,6 +37,7 @@ public class MainActivity extends ActionBarActivity
 
     private MainFragment mainFragment;
     private GraphFragment graphFragment;
+    private SettingsFragment settingsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,7 @@ public class MainActivity extends ActionBarActivity
     private void initFragments() {
         mainFragment = MainFragment.newInstance();
         graphFragment = GraphFragment.newInstance();
+        settingsFragment = SettingsFragment.newInstance();
     }
 
     @Override
@@ -80,6 +83,9 @@ public class MainActivity extends ActionBarActivity
                 break;
             case 1:
                 transaction.replace(R.id.container, graphFragment);
+                break;
+            case 2:
+                transaction.replace(R.id.container, settingsFragment);
                 break;
         }
         transaction.commit();
@@ -136,6 +142,7 @@ public class MainActivity extends ActionBarActivity
     }
 
     public void updateTemperature(long temperature) {
+        // main fragment doesn't necessarily have to be visible for temperature widget to be updated with new value
         if (mainFragment != null) {
             mainFragment.setTemperature(temperature);
         }

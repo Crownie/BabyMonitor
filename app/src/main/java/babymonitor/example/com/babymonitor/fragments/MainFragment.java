@@ -83,9 +83,13 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        MainActivity mainActivity = (MainActivity) getActivity();
         switch(v.getId()){
             case R.id.btnChart:
-                ((MainActivity) getActivity()).onNavigationDrawerItemSelected(1);
+                mainActivity.onNavigationDrawerItemSelected(1);
+                break;
+            case R.id.btnSettings:
+                mainActivity.onNavigationDrawerItemSelected(2);
                 break;
         }
     }
