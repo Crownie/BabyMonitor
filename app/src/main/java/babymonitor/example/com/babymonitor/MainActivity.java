@@ -13,7 +13,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 import babymonitor.example.com.babymonitor.fragments.GraphFragment;
 import babymonitor.example.com.babymonitor.fragments.MainFragment;
 import babymonitor.example.com.babymonitor.fragments.NavigationDrawerFragment;

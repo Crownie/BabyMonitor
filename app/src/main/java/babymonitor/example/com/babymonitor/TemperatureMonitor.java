@@ -5,6 +5,9 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class TemperatureMonitor implements ChildEventListener {
 
     private final TemperatureMonitorService service;
@@ -14,12 +17,15 @@ public class TemperatureMonitor implements ChildEventListener {
     private long mostRecentTimestamp = 0L;
     private long babyTemperature = 0L;
 
+    public final Map<Long, Long> timestampsToTemperature;
+
     public TemperatureMonitor(TemperatureMonitorService service) {
         if (service == null) {
             throw new NullPointerException();
         }
         this.service = service;
         this.settings = new TemperatureMonitorSettings(20, 50, 100);
+        this.timestampsToTemperature = new HashMap<>();
     }
 
     public void setBabyTemperature(long babyTemperature) {
@@ -39,6 +45,9 @@ public class TemperatureMonitor implements ChildEventListener {
 
         long newTimestamp = Long.parseLong(dataSnapshot.getKey());
         long newTemperature = (Long) dataSnapshot.getValue();
+
+        // add to map
+        this.timestampsToTemperature.put(newTimestamp, newTemperature);
 
         if (newTimestamp < oldTimestamp) {
             System.out.println("WARNING: Temperature data point from the past published.");
