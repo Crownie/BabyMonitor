@@ -1,5 +1,6 @@
 package babymonitor.example.com.babymonitor;
 
+import android.content.Intent;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
@@ -24,14 +25,20 @@ public class TemperatureChangeListener implements ValueEventListener {
         }
         this.record = record;
     }
+
     @Override
     public void onDataChange(DataSnapshot snapshot) {
         // NB: this gets called once when the service is instantiated
-        if (!snapshot.getKey().equals("temperature")) {
-            throw new RuntimeException();
+        if (snapshot.getKey() == null || !snapshot.getKey().equals("temperature")) {
+            throw new RuntimeException("This TemperatureChangeListener should listen for a change in the value of key 'temperature', not " + snapshot.getKey());
         }
 
-        long newTemperature = (Long) snapshot.getValue();
+        Object value = snapshot.getValue();
+        if (value == null) {
+            throw new RuntimeException("No value for key 'temperature'");
+        }
+
+        long newTemperature = (Long) value;
         Date now = new Date();
 
         this.record.setMostRecentTemperature(newTemperature, now);
