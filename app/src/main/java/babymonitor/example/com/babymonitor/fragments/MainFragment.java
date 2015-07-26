@@ -77,7 +77,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     public void setTemperature(long temperature) {
         if(attached){
             TextView tv = (TextView) getView().findViewById(R.id.tvTemperature);
-            tv.setText(temperature+"°C");
+            tv.setText(temperature);
         }
     }
 
