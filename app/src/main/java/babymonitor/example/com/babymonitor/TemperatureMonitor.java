@@ -66,9 +66,9 @@ public class TemperatureMonitor implements ChildEventListener {
          * Can potentially send out two notifications (if both runningDelta and mostRecentTemperature are dangerous)
          */
         if (this.mostRecentTemperature <= this.settings.getTooLowTemperature()) {
-            this.service.soundTemperatureAlarm("Too low: " + this.mostRecentTemperature);
+            this.service.soundTemperatureAlarm("Low temperature (" + this.mostRecentTemperature + ") recorded at " + this.mostRecentTimestamp);
         } else if (this.settings.getTooHighTemperature() <= this.mostRecentTemperature) {
-            this.service.soundTemperatureAlarm("Too high: " + this.mostRecentTemperature);
+            this.service.soundTemperatureAlarm("High temperature (" + this.mostRecentTemperature + ") recorded at " + this.mostRecentTimestamp);
         }
 
         long delta = this.mostRecentTemperature - this.babyTemperature;

@@ -59,7 +59,7 @@ public class TemperatureMonitorService extends Service {
 
     public void soundTemperatureAlarm(String message) {
         Notification.Builder nb = new Notification.Builder(this)
-                .setContentTitle("TEMPERATURE ALERT")
+                .setContentTitle("FLIROMETER ALERT")
                 .setContentText(message)
                 .setLights(1000, 200, 100)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM))

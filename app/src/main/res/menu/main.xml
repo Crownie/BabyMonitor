@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
     <item android:id="@+id/action_calibrate" android:title="@string/action_calibrate"
-          app:showAsAction="withText|ifRoom" />
+          app:showAsAction="withText|ifRoom" android:onClick="calibrate"/>
     <item android:id="@+id/open_browser" android:title="Open in Browser"
           app:showAsAction="collapseActionView" android:onClick="openBrowser"/>
     <item android:id="@+id/action_settings" android:title="@string/action_settings"

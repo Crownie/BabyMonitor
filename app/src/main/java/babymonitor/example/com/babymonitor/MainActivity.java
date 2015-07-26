@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import babymonitor.example.com.babymonitor.fragments.GraphFragment;
 import babymonitor.example.com.babymonitor.fragments.MainFragment;
 import babymonitor.example.com.babymonitor.fragments.NavigationDrawerFragment;
@@ -159,6 +160,12 @@ public class MainActivity extends ActionBarActivity
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(MainFragment.url));
         this.startActivity(i);
+    }
+
+    // MOCK
+    public void calibrate(MenuItem item) {
+        TextView textView = (TextView) this.findViewById(R.id.btt);
+        textView.setText("38.5");
     }
 
     class TemperatureReceiver extends BroadcastReceiver {
