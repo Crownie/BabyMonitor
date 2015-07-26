@@ -5,73 +5,54 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.os.IBinder;
-import babymonitor.example.com.babymonitor.*;
+import babymonitor.example.com.babymonitor.MainActivity;
+import babymonitor.example.com.babymonitor.R;
+import babymonitor.example.com.babymonitor.TemperatureChangeRecorder;
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
-import java.util.Date;
-import java.util.logging.Logger;
+public class TemperatureMonitorService extends Service {
 
-public class NotificationService extends Service {
     public final static String ON_RECEIVE_DATA ="com.babymonitor.onreceivedata";
     private final static String FIREBASE_URL = "https://boiling-torch-7535.firebaseio.com";
 
-    private TemperatureRecord record;
-    private TemperatureChangeListener listener;
-    private TemperatureMonitor monitor;
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
+    private Firebase firebase;
 
     @Override
     public void onCreate() {
-        this.record = new TemperatureRecord();
-        this.listener = new TemperatureChangeListener(this.record);
-        this.monitor = new TemperatureMonitor(this);
-        this.monitor.monitorTemperatureRecord(this.record);
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        setUpFirebase();
-        return Service.START_STICKY;
-    }
-
-    public void setUpFirebase() {
-        // get handle to firebase and authenticate
+        // The service is being created (only called once)
         Firebase.setAndroidContext(this);
-        Firebase firebase = new Firebase(NotificationService.FIREBASE_URL);
-        firebase.authAnonymously(new Firebase.AuthResultHandler() {
+        this.firebase = new Firebase(TemperatureMonitorService.FIREBASE_URL);
+        this.firebase.authAnonymously(new Firebase.AuthResultHandler() {
             @Override
             public void onAuthenticated(AuthData authData) {
-                Logger.getLogger("firebase").fine("authenticated successfully with firebase");
+
             }
 
             @Override
             public void onAuthenticationError(FirebaseError firebaseError) {
-                Logger.getLogger("firebase").severe("could not authenticate with firebase");
+
             }
         });
-        long ut = new Date().getTime();
-        firebase.child("temperatures");
-
-        // start listening to temperature changes
-        Firebase temperatureRef = firebase.child("temperature");
-        if (temperatureRef == null) {
-            throw new RuntimeException("No temperature key available from Firebase.");
-        }
-        temperatureRef.addValueEventListener(this.listener);
     }
 
-    /**
-     * Broadcast most recent temperature
-     */
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        // The service is starting, due to a call to startService()
+        // Called when startService() is called
+        Firebase temperaturesRef = this.firebase.child("temperatures");
+        if (temperaturesRef == null) {
+            throw new RuntimeException("Couldn't get a reference to the 'temperatures' keystore");
+        } else {
+            if (!temperaturesRef.getKey().equals("temperatures")) throw new AssertionError();
+            temperaturesRef.addChildEventListener(new TemperatureChangeRecorder(this));
+        }
+        return Service.START_STICKY;
+    }
+
     public void broadcastTemperature(long temperature) {
-        Intent intent = new Intent();
-        intent.setAction(ON_RECEIVE_DATA);
+        Intent intent = new Intent(ON_RECEIVE_DATA);
         intent.putExtra("temperature", temperature);
         sendBroadcast(intent);
     }
@@ -95,4 +76,28 @@ public class NotificationService extends Service {
         NotificationManager nm = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         nm.notify(100, nb.build());
     }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        // A client is binding to the service with bindService()
+        return null;
+    }
+//
+//    @Override
+//    public boolean onUnbind(Intent intent) {
+//        // All clients have unbound with unbindService()
+//        return true;
+//    }
+//
+//    @Override
+//    public void onRebind(Intent intent) {
+//        // A client is binding to the service with bindService(),
+//        // after onUnbind() has already been called
+//    }
+
+    @Override
+    public void onDestroy() {
+        // The service is no longer used and is being destroyed
+    }
+
 }
