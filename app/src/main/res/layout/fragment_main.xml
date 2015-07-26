@@ -14,7 +14,8 @@
         android:id="@+id/stream_webview"
         android:layout_alignTop="@+id/bodyTemp"
         android:layout_alignLeft="@+id/bodyTemp"
-        android:layout_alignStart="@+id/bodyTemp"/>
+        android:layout_alignStart="@+id/bodyTemp"
+        android:clickable="false"/>
     <LinearLayout
         android:layout_width="80dp"
         android:layout_height="80dp"
@@ -26,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="12dp"
-            android:text="Temperature"/>
+            android:text="Current Temperature" android:id="@+id/current_temperature_textview"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -68,5 +69,14 @@
         android:background="@drawable/settings_btn"
         android:layout_below="@+id/btnSing" android:layout_toStartOf="@+id/btnSing"
         android:contentDescription="settings"/>
+    <LinearLayout android:layout_width="80dp" android:layout_height="80dp" android:orientation="vertical"
+                  android:id="@+id/linearLayout"
+                  android:layout_alignParentTop="true" android:layout_alignParentEnd="true">
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="12dp"
+                  android:text="Baby Temperature" android:id="@+id/baby_temperature_textview"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:textAppearance="?android:attr/textAppearanceLarge" android:text="0°"
+                  android:id="@+id/textView"/>
+    </LinearLayout>
 
 </RelativeLayout>

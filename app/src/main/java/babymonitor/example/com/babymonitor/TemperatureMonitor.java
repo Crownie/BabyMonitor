@@ -9,9 +9,10 @@ public class TemperatureMonitor implements ChildEventListener {
 
     private final TemperatureMonitorService service;
     private final TemperatureMonitorSettings settings;
+
     private long mostRecentTemperature = 0L;
     private long mostRecentTimestamp = 0L;
-    private long runningDelta = 0L;
+    private long babyTemperature = 0L;
 
     public TemperatureMonitor(TemperatureMonitorService service) {
         if (service == null) {
@@ -19,6 +20,10 @@ public class TemperatureMonitor implements ChildEventListener {
         }
         this.service = service;
         this.settings = new TemperatureMonitorSettings(10, 100, 200);
+    }
+
+    public void setBabyTemperature(long babyTemperature) {
+        this.babyTemperature = babyTemperature;
     }
 
     public TemperatureMonitorSettings getSettings() {
@@ -38,10 +43,6 @@ public class TemperatureMonitor implements ChildEventListener {
             System.out.println("WARNING: Temperature data point from the past published.");
         }
 
-        long delta = newTemperature - oldTemperature;
-        this.runningDelta = this.runningDelta + delta;
-        System.out.println("Running delta now " + runningDelta);
-
         // update instance fields
         this.mostRecentTemperature = newTemperature;
         this.mostRecentTimestamp = newTimestamp;
@@ -59,8 +60,9 @@ public class TemperatureMonitor implements ChildEventListener {
             this.service.soundTemperatureAlarm("Too high: " + this.mostRecentTemperature);
         }
 
-        if (this.settings.getTooBigDelta() <= Math.abs(this.runningDelta)) {
-            this.service.soundTemperatureAlarm("Too big a temperature change: " + this.runningDelta);
+        long delta = this.mostRecentTemperature - this.babyTemperature;
+        if (this.settings.getTooBigDelta() <= Math.abs(delta)) {
+            this.service.soundTemperatureAlarm("Too big a temperature change: " + delta);
         }
     }
 

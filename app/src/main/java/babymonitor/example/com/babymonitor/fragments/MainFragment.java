@@ -16,7 +16,7 @@ import babymonitor.example.com.babymonitor.R;
 
 public class MainFragment extends Fragment implements View.OnClickListener {
 
-    String url = "http://192.168.43.192:8080";
+    String url = "http://192.168.43.66:8080";
     boolean attached = false;
 
     public static MainFragment newInstance() {
@@ -42,8 +42,13 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         WebView wv = (WebView) rootView.findViewById(R.id.stream_webview);
-        ImageButton chartBtn =(ImageButton) rootView.findViewById(R.id.btnChart);
+
+        ImageButton chartBtn = (ImageButton) rootView.findViewById(R.id.btnChart);
         chartBtn.setOnClickListener(this);
+
+        ImageButton settingsBtn = (ImageButton) rootView.findViewById(R.id.btnSettings);
+        settingsBtn.setOnClickListener(this);
+
         initButtons();
 
         wv.loadUrl(url);

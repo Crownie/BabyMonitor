@@ -9,6 +9,15 @@ public class TemperatureMonitorSettings {
     private long tooHighTemperature;
     private long tooBigDelta;
 
+    public TemperatureMonitorSettings(long tooLowTemperature, long tooHighTemperature, long tooBigDelta) {
+        if (tooHighTemperature < tooLowTemperature) {
+            tooHighTemperature = tooLowTemperature;
+        }
+        this.tooLowTemperature = tooLowTemperature;
+        this.tooHighTemperature = tooHighTemperature;
+        this.tooBigDelta = tooBigDelta;
+    }
+
     public long getTooBigDelta() {
         return tooBigDelta;
     }
@@ -40,14 +49,5 @@ public class TemperatureMonitorSettings {
         } else {
             throw new Exception("tooLowTemperature must be less than " + this.tooHighTemperature);
         }
-    }
-
-    public TemperatureMonitorSettings(long tooLowTemperature, long tooHighTemperature, long tooBigDelta) {
-        if (tooHighTemperature < tooLowTemperature) {
-            tooHighTemperature = tooLowTemperature;
-        }
-        this.tooLowTemperature = tooLowTemperature;
-        this.tooHighTemperature = tooHighTemperature;
-        this.tooBigDelta = tooBigDelta;
     }
 }
