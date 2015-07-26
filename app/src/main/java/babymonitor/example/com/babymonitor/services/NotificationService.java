@@ -10,6 +10,7 @@ import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
+import java.util.Date;
 import java.util.logging.Logger;
 
 public class NotificationService extends Service {
@@ -54,6 +55,8 @@ public class NotificationService extends Service {
                 Logger.getLogger("firebase").severe("could not authenticate with firebase");
             }
         });
+        long ut = new Date().getTime();
+        firebase.child("temperatures");
 
         // start listening to temperature changes
         Firebase temperatureRef = firebase.child("temperature");

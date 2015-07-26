@@ -1,6 +1,5 @@
 package babymonitor.example.com.babymonitor;
 
-import android.content.Intent;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
