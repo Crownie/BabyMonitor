@@ -5,22 +5,24 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 
-public class TemperatureChangeRecorder implements ChildEventListener {
-
-    public static long TOO_BIG_TEMPERATURE_DELTA = 40;
-    public static long TOO_HIGH_TEMPERATURE = 100;
-    public static long TOO_LOW_TEMPERATURE = 10;
+public class TemperatureMonitor implements ChildEventListener {
 
     private final TemperatureMonitorService service;
+    private final TemperatureMonitorSettings settings;
     private long mostRecentTemperature = 0L;
     private long mostRecentTimestamp = 0L;
     private long runningDelta = 0L;
 
-    public TemperatureChangeRecorder(TemperatureMonitorService service) {
+    public TemperatureMonitor(TemperatureMonitorService service) {
         if (service == null) {
             throw new NullPointerException();
         }
         this.service = service;
+        this.settings = new TemperatureMonitorSettings(10, 100, 200);
+    }
+
+    public TemperatureMonitorSettings getSettings() {
+        return settings;
     }
 
     @Override
@@ -51,13 +53,13 @@ public class TemperatureChangeRecorder implements ChildEventListener {
          * Temperature safety checks
          * Can potentially send out two notifications (if both runningDelta and mostRecentTemperature are dangerous)
          */
-        if (this.mostRecentTemperature <= TOO_LOW_TEMPERATURE) {
+        if (this.mostRecentTemperature <= this.settings.getTooLowTemperature()) {
             this.service.soundTemperatureAlarm("Too low: " + this.mostRecentTemperature);
-        } else if (TOO_HIGH_TEMPERATURE <= this.mostRecentTemperature) {
+        } else if (this.settings.getTooHighTemperature() <= this.mostRecentTemperature) {
             this.service.soundTemperatureAlarm("Too high: " + this.mostRecentTemperature);
         }
 
-        if (TOO_BIG_TEMPERATURE_DELTA <= Math.abs(this.runningDelta)) {
+        if (this.settings.getTooBigDelta() <= Math.abs(this.runningDelta)) {
             this.service.soundTemperatureAlarm("Too big a temperature change: " + this.runningDelta);
         }
     }
@@ -84,4 +86,5 @@ public class TemperatureChangeRecorder implements ChildEventListener {
     public void onCancelled(FirebaseError firebaseError) {
         System.out.println(firebaseError);
     }
+
 }

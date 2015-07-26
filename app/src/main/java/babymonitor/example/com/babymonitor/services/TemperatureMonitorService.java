@@ -7,7 +7,7 @@ import android.media.RingtoneManager;
 import android.os.IBinder;
 import babymonitor.example.com.babymonitor.MainActivity;
 import babymonitor.example.com.babymonitor.R;
-import babymonitor.example.com.babymonitor.TemperatureChangeRecorder;
+import babymonitor.example.com.babymonitor.TemperatureMonitor;
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -46,7 +46,7 @@ public class TemperatureMonitorService extends Service {
             throw new RuntimeException("Couldn't get a reference to the 'temperatures' keystore");
         } else {
             if (!temperaturesRef.getKey().equals("temperatures")) throw new AssertionError();
-            temperaturesRef.addChildEventListener(new TemperatureChangeRecorder(this));
+            temperaturesRef.addChildEventListener(new TemperatureMonitor(this));
         }
         return Service.START_STICKY;
     }
