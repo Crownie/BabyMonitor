@@ -13,11 +13,10 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
-
 import babymonitor.example.com.babymonitor.fragments.GraphFragment;
 import babymonitor.example.com.babymonitor.fragments.MainFragment;
 import babymonitor.example.com.babymonitor.fragments.NavigationDrawerFragment;
-import babymonitor.example.com.babymonitor.services.NotificationService;
+import babymonitor.example.com.babymonitor.services.TemperatureMonitorService;
 
 
 public class MainActivity extends ActionBarActivity
@@ -40,27 +39,25 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // set up app layout and UI structure
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mTitle = getTitle();
-
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+        mTitle = getTitle();
 
-        // use this to start and trigger a service
-        Intent i = new Intent(getApplicationContext(), NotificationService.class);
-        // potentially add data to the intent
-//        i.putExtra("KEY1", "Value to be used by the service");
-        receiver = new TemperatureReceiver();
+        // set up temperature broadcast receiver
+        this.receiver = new TemperatureReceiver();
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(NotificationService.ON_RECEIVE_DATA);
+        intentFilter.addAction(TemperatureMonitorService.ON_RECEIVE_DATA);
         registerReceiver(receiver, intentFilter);
 
+        // start temperature monitoring service
+        Intent i = new Intent(getApplicationContext(), TemperatureMonitorService.class);
         getApplicationContext().startService(i);
 
     }
@@ -154,5 +151,11 @@ public class MainActivity extends ActionBarActivity
             MainActivity.this.updateTemperature(temperature);
         }
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        this.unregisterReceiver(this.receiver);
     }
 }
