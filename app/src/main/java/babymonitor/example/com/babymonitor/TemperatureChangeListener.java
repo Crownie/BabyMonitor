@@ -28,6 +28,9 @@ public class TemperatureChangeListener implements ValueEventListener {
     @Override
     public void onDataChange(DataSnapshot snapshot) {
         // NB: this gets called once when the service is instantiated
+        if (snapshot == null) {
+            throw new NullPointerException();
+        }
         if (snapshot.getKey() == null || !snapshot.getKey().equals("temperature")) {
             throw new RuntimeException("This TemperatureChangeListener should listen for a change in the value of key 'temperature', not " + snapshot.getKey());
         }
