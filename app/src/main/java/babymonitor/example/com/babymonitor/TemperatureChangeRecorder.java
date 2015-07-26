@@ -23,20 +23,9 @@ public class TemperatureChangeRecorder implements ChildEventListener {
         this.service = service;
     }
 
-    public long getMostRecentTemperature() {
-        return mostRecentTemperature;
-    }
-
-    public long getMostRecentTimestamp() {
-        return mostRecentTimestamp;
-    }
-
-    public long getRunningDelta() {
-        return runningDelta;
-    }
-
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
+        // initially called at instantiation with dataSnapshot = latest child added
         System.out.println("Snapshot received: " + dataSnapshot);
         long oldTimestamp = this.mostRecentTimestamp;
         long oldTemperature = this.mostRecentTemperature;
@@ -74,14 +63,13 @@ public class TemperatureChangeRecorder implements ChildEventListener {
     }
 
     /**
-     * Timestamps are immutable and shouldn't change once added so if this
-     * method is called, an exception will be thrown.
+     * Timestamps are immutable and shouldn't change once added.
      * @param dataSnapshot
      * @param previousChildName
      */
     @Override
     public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
-        throw new RuntimeException("Temperature data point altered.");
+        System.out.println("WARNING: Temperature data point altered.");
     }
 
     @Override
